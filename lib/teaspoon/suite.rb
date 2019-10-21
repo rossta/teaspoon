@@ -63,10 +63,14 @@ module Teaspoon
       def asset_url(asset)
         params = []
         params << "body=1" if config.expand_assets
-        params << "instrument=1" if instrument_file?(asset.filename)
+        params << "instrument=1" if instrument_file?(asset_pathname(asset))
         url = asset.logical_path
         url += "?#{params.join("&")}" if params.any?
         url
+      end
+
+      def asset_pathname(asset)
+        asset.respond_to?(:filename) ? Pathname.new(asset.filename) : asset.pathname
       end
 
       def asset_and_dependencies(asset)
